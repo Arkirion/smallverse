@@ -1,18 +1,15 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { useSphere } from "@react-three/cannon";
 import { Vector3 } from "three";
 import { useEffect, useRef } from "react";
 import { useKeyboard } from "../hooks/useKeyboard";
+import { Clock } from 'three'
 
 const CHARACTER_SPEED = 5
 const CHARACTER_JUMP_FORCE = 4
-export const Player = () => {
+
+export const Player = ({innerRef, api, setPlayerPosition}) => {
   const { moveBackward, moveForward, moveLeft, moveRight, jump} = useKeyboard()
   const { camera } = useThree();
-  const [ref, api] = useSphere(() => ({
-    mass: 1, type: "Dynamic",
-    position: [0, 0.5, 0]
-  }))
 
   const pos = useRef([0,0,0])
   useEffect(() => {
@@ -27,9 +24,8 @@ export const Player = () => {
       vel.current = p
     })
   }, [api.velocity])
-
-
-
+  const clockRef = useRef(new Clock())
+  const timePassedRef = useRef(0)
   //@link https://docs.pmnd.rs/react-three-fiber/api/hooks#useframe
   useFrame(() => {
     camera.position.copy(
@@ -40,6 +36,15 @@ export const Player = () => {
       )
     )
 
+    timePassedRef.current += clockRef.current.getDelta()
+
+    if (timePassedRef.current >= 0) { 
+      timePassedRef.current = 0
+      setPlayerPosition([pos.current[0],
+        pos.current[1],
+        pos.current[2]])
+    }
+    
     const direction = new Vector3()
 
     const frontVector = new Vector3(
@@ -78,7 +83,11 @@ export const Player = () => {
     }
 
   })
+
   return (
-    <mesh ref={ref}/>
+    <mesh ref={innerRef}>
+      <sphereBufferGeometry args={[1, 32, 32]} />
+      <meshNormalMaterial />
+    </mesh>
   )
 }
