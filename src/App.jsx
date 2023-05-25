@@ -2,24 +2,15 @@ import { Physics } from '@react-three/cannon';
 import { Ground } from './components/Ground';
 import { Player } from './components/Player';
 import { Players } from './components/Players';
-import { useSphere } from '@react-three/cannon';
 import { io } from 'socket.io-client';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { EnvironmentWrapper } from './components/EnvironmentWrapper';
 
 import { SphereTest } from './components/items/SphereTest';
 
 const ObjectsWrapper = ({ children }) => {
   const [playerPosition, setPlayerPosition] = useState([10, 0.5, 0]);
-  const [lastPosition, setLastPosition] = useState([0, 0, 0]);
   const [clients, setClients] = useState({});
-
-  const [ref, api] = useSphere(() => ({
-    mass: 1,
-    type: 'Dynamic',
-    args: [1],
-    position: playerPosition,
-  }));
 
   const [socketClient, setSocketClient] = useState(null);
 
@@ -36,20 +27,23 @@ const ObjectsWrapper = ({ children }) => {
       socket.disconnect();
     };
   }, []);
+
+  const sharePositionWebSocket = (playerPosition) => {
+    socketClient?.emit('move', { id: socketClient.id, position: playerPosition });
+  }
   
   // emit position
-  useEffect(() => {
+  // useEffect(() => {
 
-    if (socketClient) {
-      socketClient.emit('move', { id: socketClient.id, position: playerPosition });
-      setLastPosition(playerPosition);
-    }
-  }, [playerPosition]);
+  //   if (socketClient) {
+  //     socketClient.emit('move', { id: socketClient.id, position: playerPosition });
+  //   }
+  // }, [playerPosition]);
 
   return (
     <>
       <SphereTest />
-      <Player innerRef={ref} api={api} setPlayerPosition={setPlayerPosition} />
+      <Player handleServerPosition={ sharePositionWebSocket} />
       <Players socketClient={socketClient} clients={clients} />
       {children}
     </>

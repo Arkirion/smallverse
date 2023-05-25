@@ -3,12 +3,23 @@ import { Vector3 } from "three";
 import { useEffect, useRef } from "react";
 import { useKeyboard } from "../hooks/useKeyboard";
 import { Clock } from "three";
+import { useSphere } from '@react-three/cannon';
 
 const CHARACTER_SPEED = 5;
 const CHARACTER_JUMP_FORCE = 4;
 const UPDATE_FREQUENCY_ON_SECONDS = 0.01; // e.g :  0.3 seg, 1 seg, 2 seg
 
-export const Player = ({ innerRef, api, setPlayerPosition }) => {
+
+export const Player = ({ handleServerPosition }) => {
+
+  const [modelReference, modelApi] = useSphere(() => ({
+    mass: 1,
+    type: 'Dynamic',
+    args: [1],
+    position: [10, 0.5, 0],
+  }));
+
+
   const playerVelocity = useRef([0, 0, 0]);
   const playerPosition = useRef([0, 0, 0]);
 
@@ -20,16 +31,16 @@ export const Player = ({ innerRef, api, setPlayerPosition }) => {
   const { camera } = useThree();
 
   useEffect(() => {
-    api.position.subscribe((p) => {
+    modelApi.position.subscribe((p) => {
       playerPosition.current = p;
     });
-  }, [api.position]);
+  }, [modelApi.position]);
 
   useEffect(() => {
-    api.velocity.subscribe((p) => {
+    modelApi.velocity.subscribe((p) => {
       playerVelocity.current = p;
     });
-  }, [api.velocity]);
+  }, [modelApi.velocity]);
 
 
   //@link https://docs.pmnd.rs/react-three-fiber/api/hooks#useframe
@@ -43,7 +54,7 @@ export const Player = ({ innerRef, api, setPlayerPosition }) => {
 
     if (timePassedRef.current > UPDATE_FREQUENCY_ON_SECONDS ) {
       timePassedRef.current = 0;
-      setPlayerPosition([posX, posY, posZ]);
+      handleServerPosition([posX, posY, posZ])
     }
 
     const frontVectorZ = new Vector3(
@@ -66,16 +77,16 @@ export const Player = ({ innerRef, api, setPlayerPosition }) => {
       .applyEuler(camera.rotation); // rotates Vector 'direcction' base on camera direction to pair/match directions.
 
     
-    api.velocity.set(direction.x, playerVelocity.current[1], direction.z);
+      modelApi.velocity.set(direction.x, playerVelocity.current[1], direction.z);
 
     const avoidDoubleJump = Math.abs(playerVelocity.current[1]) < 0.05;
     if (jump && avoidDoubleJump) {
-      api.velocity.set(playerVelocity.current[0], CHARACTER_JUMP_FORCE, playerVelocity.current[2]);
+      modelApi.velocity.set(playerVelocity.current[0], CHARACTER_JUMP_FORCE, playerVelocity.current[2]);
     }
   });
 
   return (
-    <mesh ref={innerRef}>
+    <mesh ref={modelReference}>
       <sphereBufferGeometry args={[1, 32, 32]} />
       <meshNormalMaterial />
     </mesh>
