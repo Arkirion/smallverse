@@ -1,13 +1,13 @@
 const color = Math.random() * 0xffffff
 
-export function Players({ socketClient, clients }) {
-  return Object.keys(clients)
-    .filter((clientKey) => clientKey !== socketClient.id)
+export function Players({webSocketClient, userClients}) {
+  return Object.keys(userClients)
+    .filter((clientKey) => clientKey !== webSocketClient.id)
     .map(client => {
-      const { position } = clients[client]
+      const { position } = userClients[client]
       return (
         <mesh position={position}>
-          <sphereBufferGeometry args={[1, 32, 32]} />
+          <sphereGeometry args={[1, 32, 32]} />
           <meshBasicMaterial color={color} />
         </mesh>
       )
