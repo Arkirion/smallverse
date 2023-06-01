@@ -56,7 +56,7 @@ export const handleMovement = ({playerModelApi, handleServerPosition}) => {
     const posY = playerPosition.current[1];
     const posZ = playerPosition.current[2];
     camera.position.copy(new Vector3(posX, posY, posZ));
-
+    
     // RATE OF POSITION UPDATE
     timePassedRef.current += clockRef.current.getDelta();
     if (timePassedRef.current > UPDATE_FREQUENCY_ON_SECONDS) {

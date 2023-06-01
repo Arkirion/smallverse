@@ -6,7 +6,7 @@ export const usePlayerModel = () => {
     mass: 1,
     type: 'Dynamic',
     args: [1],
-    position: [10, 0.5, 0],
+    position: [5, 0.5, 5],
   }));
 
   const PlayerModel = () => {
