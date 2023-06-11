@@ -1,4 +1,3 @@
-import { Canvas } from '@react-three/fiber'
 import { Sky } from '@react-three/drei'
 import { Camera } from './Camera'
 
@@ -6,7 +5,6 @@ import { Camera } from './Camera'
 export const EnvironmentWrapper = ({ children }) => {
   return (
     <>
-      <Canvas shadows>
         <Sky sunPosition={[100, 100, 20]} />
         <ambientLight intensity={0.4} />
         <Camera />
@@ -21,7 +19,6 @@ export const EnvironmentWrapper = ({ children }) => {
           shadow-camera-bottom={-20}
         />
         {children}
-      </Canvas>
     </>
   )
 }

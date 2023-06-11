@@ -3,44 +3,32 @@ import { Physics } from '@react-three/cannon';
 import { useWebSocket } from './hooks/useWebSocket';
 import { Ground } from './components/Ground';
 import { Player } from './components/Player/Player';
+import { DevTools } from './components/DevTools/DevTools';
 import { Players } from './components/Players';
+import { Items } from './components/Items';
+
 import { EnvironmentWrapper } from './components/EnvironmentWrapper';
-import { SphereTest } from './components/items/SphereTest';
-import { Stats, Grid, PivotControls, GizmoHelper, GizmoViewport } from '@react-three/drei';
+import { Canvas} from '@react-three/fiber';
+
 
 
 function App() {
-  const { webSocketClient, userClients, sharePositionWebSocket } = useWebSocket()
+  const { webSocketClient, userClients, sharePositionWebSocket } = useWebSocket();
 
   return (
     <>
-      <EnvironmentWrapper>
-        <Physics>
-          <PivotControls position={[0, 0, 0]}>
-            <mesh scale={[0.5, 0.5, 0.5]} position={[0, 0, 0]} castShadow>
-              <boxGeometry />
-              <meshStandardMaterial />
-            </mesh>
-            <mesh scale={[0.5, 0.5, 0.5]} position={[5, 0, 0]}  castShadow>
-              <boxGeometry />
-              <meshStandardMaterial color={'red'}/>
-            </mesh>
-            <mesh scale={[0.5, 0.5, 0.5]} position={[0, 0, 5]}  castShadow>
-              <boxGeometry />
-              <meshStandardMaterial color={'blue'}/>
-            </mesh>
-          </PivotControls>
-
-          <Player handleServerPosition={sharePositionWebSocket} />
-          <Players webSocketClient={webSocketClient} userClients={userClients} />
-          <Ground />
-          <Stats />
-          <GizmoHelper>
-            <GizmoViewport axisColors={['red', 'green', 'blue']} labelColor="black" />
-          </GizmoHelper>
-          <Grid infiniteGrid />
-        </Physics>
-      </EnvironmentWrapper>
+      <Canvas shadows>
+        <EnvironmentWrapper>
+          <Physics>
+            <Items />
+            <Player handleServerPosition={sharePositionWebSocket} />
+            <Players webSocketClient={webSocketClient} userClients={userClients} />
+            <DevTools />
+            <Ground />
+            {/* DevTools , TODO: feature flag*/}
+          </Physics>
+        </EnvironmentWrapper>
+      </Canvas>
       <div className="pointer">+</div>
     </>
   );
