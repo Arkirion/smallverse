@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useThree } from '@react-three/fiber'
-import { Sphere } from '@react-three/drei';
+import { Sphere, Box } from '@react-three/drei';
 import { Vector3 } from 'three';
+import { useItemSelectorStore } from '../store/itemSelectoreStore';
 
 const SphereComponent = ({ position, color }) => (
   <Sphere args={[1, 32, 32]} position={position}>
@@ -9,13 +10,20 @@ const SphereComponent = ({ position, color }) => (
   </Sphere>
 )
 
+const BoxComponent = ({ position, color }) => (
+  <Box args={[1, 1, 1]} position={position}>
+    <meshStandardMaterial color={color} />
+  </Box>
+)
+
 const DISTANCE = 4
 
 export function Items() {
   const { gl, raycaster, camera } = useThree();
-  const [spheres, setSpheres] = useState([]);
+  const [items, setItems] = useState([]);
 
   const onClick = (event) => {
+
     // // Actualizamos el raycaster con la posición del click
     // raycaster.setFromCamera(event.clientX, event.clientY, camera);
     const direction = new Vector3()
@@ -32,11 +40,19 @@ export function Items() {
     camera.getWorldDirection(direction)
     direction.normalize().multiplyScalar(DISTANCE);
     const [x, y, z] = camera.position.clone().add(direction);
-
-    setSpheres((oldSpheres) => [
-      ...oldSpheres,
-      { position: [x, y, z], color: 'red', key: crypto.randomUUID() },
-    ]);
+  
+    const currentSelectedItem = useItemSelectorStore.getState().selectedItem.name;
+    if (currentSelectedItem === 'sphere') {
+      setItems((oldItems) => [
+        ...oldItems,
+        {  type: 'sphere' , position: [x, y, z], color: 'red', key: crypto.randomUUID() },
+      ]);
+    } else if (currentSelectedItem === 'square') {
+      setItems((oldItems) => [
+        ...oldItems,
+        { type: 'square', position: [x, y, z], color: 'green', key: crypto.randomUUID() },
+      ]);
+    }
   };
 
   useEffect(() => {
@@ -49,8 +65,13 @@ export function Items() {
   }, [gl, raycaster]);
 
   return <group>
-    {spheres.map((sphere) => {
-      return <SphereComponent key={sphere.key} position={sphere.position} rotation={[0, Math.PI, 0]} color={sphere.color} />;
+    {items.map((item) => {
+      if (item.type === 'square') {
+        return <BoxComponent key={item.key} position={item.position} rotation={[0, Math.PI, 0]} color={item.color} />
+      }
+      if (item.type === 'sphere') {
+        return <SphereComponent key={item.key} position={item.position} rotation={[0, Math.PI, 0]} color={item.color} />;
+      }
     })}
   </group>
 }

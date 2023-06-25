@@ -9,6 +9,7 @@ import { Items } from './components/Items';
 
 import { EnvironmentWrapper } from './components/EnvironmentWrapper';
 import { Canvas} from '@react-three/fiber';
+import { Ui } from './components/UI/ui';
 
 
 
@@ -29,7 +30,7 @@ function App() {
           </Physics>
         </EnvironmentWrapper>
       </Canvas>
-      <div className="pointer">+</div>
+      <Ui />
     </>
   );
 }

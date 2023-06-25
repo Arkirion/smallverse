@@ -1,6 +1,7 @@
 // @ts-check
 
 import { useState, useEffect } from "react";
+import { useItemSelectorStore } from "../../../store/itemSelectoreStore";
 
 const ACTIONS_KEYBOARD_MAP = {
   KeyW: "moveForward",
@@ -8,6 +9,13 @@ const ACTIONS_KEYBOARD_MAP = {
   KeyA: "moveLeft",
   KeyD: "moveRight",
   Space: "jump",
+
+};
+
+const SHORTCUT_ACTIONS_KEYBOARD_MAP = {
+  Digit1: "empty",
+  Digit2: "square",
+  Digit3: "sphere",
 };
 
 export const useKeyboard = () => {
@@ -19,6 +27,7 @@ export const useKeyboard = () => {
     jump: false,
   });
 
+  const setItem = useItemSelectorStore(state => state.setItem)
   /**
    * Maneja la acción del teclado.
    * @param {KeyboardEvent} e - El evento del teclado.
@@ -27,6 +36,10 @@ export const useKeyboard = () => {
   const handleAction = (e, isPressed) => {
     const { code: keyKode } = e;
     const action = ACTIONS_KEYBOARD_MAP[keyKode];
+    if (keyKode in SHORTCUT_ACTIONS_KEYBOARD_MAP) {
+      console.log(SHORTCUT_ACTIONS_KEYBOARD_MAP[keyKode])
+      setItem(SHORTCUT_ACTIONS_KEYBOARD_MAP[keyKode])
+    }
 
     if (action) {
       setActions((prevActions) => ({

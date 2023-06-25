@@ -2,6 +2,14 @@
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: 'Montserrat';
+  src: url('./assets/fonts/Montserrat-VariableFont_wght.ttf') format('truetype');
+  font-weight: 400; /* Normal */
+  font-style: normal;
+  /* Puedes agregar más formatos de fuente aquí si tienes archivos adicionales */
+}
+
 html,
 body,
 #root {
@@ -11,6 +19,7 @@ body,
   padding: 0;
   user-select: none;
   overflow: hidden;
+  font-family: 'Montserrat', sans-serif;
 }
 
 
@@ -23,19 +32,4 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-}
-
-.pointer {
-  color:white;
-  font-size: 40px;
-  position: absolute;
-  top:50%;
-  left:50%;
-  transform: translate(-50%, -50%)
-}
-
-.menu{
-  position: absolute;
-  top:10px;
-  left: 10px;
 }
