@@ -28,6 +28,7 @@ export const useKeyboard = () => {
   });
 
   const setItem = useItemSelectorStore(state => state.setItem)
+  
   /**
    * Maneja la acción del teclado.
    * @param {KeyboardEvent} e - El evento del teclado.
@@ -37,7 +38,6 @@ export const useKeyboard = () => {
     const { code: keyKode } = e;
     const action = ACTIONS_KEYBOARD_MAP[keyKode];
     if (keyKode in SHORTCUT_ACTIONS_KEYBOARD_MAP) {
-      console.log(SHORTCUT_ACTIONS_KEYBOARD_MAP[keyKode])
       setItem(SHORTCUT_ACTIONS_KEYBOARD_MAP[keyKode])
     }
 

@@ -1,13 +1,13 @@
 import { Physics } from '@react-three/cannon';
 
 import { useWebSocket } from './hooks/useWebSocket';
-import { Ground } from './components/Ground';
+import { Ground } from './components/Scene/Ground';
 import { Player } from './components/Player/Player';
 import { DevTools } from './components/DevTools/DevTools';
-import { Players } from './components/Players';
-import { Items } from './components/Items';
+import { PlayersRenderer } from './ObjectRenderer/PlayersRenderer';
+import { ItemsRenderer } from './ObjectRenderer/ItemsRenderer';
 
-import { EnvironmentWrapper } from './components/EnvironmentWrapper';
+import { EnvironmentWrapper } from './components/Scene/EnvironmentWrapper';
 import { Canvas} from '@react-three/fiber';
 import { Ui } from './components/UI/ui';
 
@@ -21,9 +21,9 @@ function App() {
       <Canvas shadows>
         <EnvironmentWrapper>
           <Physics>
-            <Items />
+            <ItemsRenderer />
             <Player handleServerPosition={sharePositionWebSocket} />
-            <Players webSocketClient={webSocketClient} userClients={userClients} />
+            <PlayersRenderer webSocketClient={webSocketClient} userClients={userClients} />
             <DevTools />
             <Ground />
             {/* DevTools , TODO: feature flag*/}

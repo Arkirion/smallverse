@@ -9,7 +9,7 @@ const CHARACTER_SPEED = 5;
 const CHARACTER_JUMP_FORCE = 4;
 const UPDATE_FREQUENCY_ON_SECONDS = 0.01; // e.g :  0.3 seg, 1 seg, 2 seg
 
-export const handleMovement = ({playerModelApi, handleServerPosition}) => {
+export const useMovement = ({playerModelApi, handleServerPosition}) => {
   const playerVelocity = useRef([0, 0, 0]);
   const playerPosition = useRef([0, 0, 0]);
 

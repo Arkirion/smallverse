@@ -1,6 +1,7 @@
 import { useSphere } from '@react-three/cannon';
 
 
+
 export const usePlayerModel = () => {
   const [playerModelReference, playerModelApi] = useSphere(() => ({
     mass: 1,
