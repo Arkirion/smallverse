@@ -3,13 +3,9 @@ import { Vector3 } from 'three';
 import { useEffect, useRef } from 'react';
 import { useKeyboard } from './useKeyboard';
 import { Clock } from 'three';
+import { CONFIGURATION } from '../../../configurations';
 
-
-const CHARACTER_SPEED = 5;
-const CHARACTER_JUMP_FORCE = 4;
-const UPDATE_FREQUENCY_ON_SECONDS = 0.01; // e.g :  0.3 seg, 1 seg, 2 seg
-
-export const useMovement = ({playerModelApi, handleServerPosition}) => {
+export const useMovement = ({playerModelApi, sharePositionWebSocket}) => {
   const playerVelocity = useRef([0, 0, 0]);
   const playerPosition = useRef([0, 0, 0]);
 
@@ -38,7 +34,7 @@ export const useMovement = ({playerModelApi, handleServerPosition}) => {
     direction
       .subVectors(frontVectorZ, sideVectorX) // a - b to calculate direction
       .normalize() // change "magnitude/length" to 1 but maintain direction to work only with it
-      .multiplyScalar(CHARACTER_SPEED) // multiplies the vector for an scalar(real number) by the character speed, this is to change magnitude maintaining direcction
+      .multiplyScalar(CONFIGURATION.player.speed) // multiplies the vector for an scalar(real number) by the character speed, this is to change magnitude maintaining direcction
       .applyEuler(cameraDirection); // rotates Vector 'direcction' base on camera direction to pair/match directions.
     playerModelApi.velocity.set(direction.x, playerVelocity.current[1], direction.z);
   };
@@ -46,7 +42,7 @@ export const useMovement = ({playerModelApi, handleServerPosition}) => {
   const handleDoubleJumpIssue = () => {
     const avoidDoubleJump = Math.abs(playerVelocity.current[1]) < 0.05;
     if (jump && avoidDoubleJump) {
-      playerModelApi.velocity.set(playerVelocity.current[0], CHARACTER_JUMP_FORCE, playerVelocity.current[2]);
+      playerModelApi.velocity.set(playerVelocity.current[0], CONFIGURATION.player.jumpForce, playerVelocity.current[2]);
     }
   };
 
@@ -59,9 +55,9 @@ export const useMovement = ({playerModelApi, handleServerPosition}) => {
     
     // RATE OF POSITION UPDATE
     timePassedRef.current += clockRef.current.getDelta();
-    if (timePassedRef.current > UPDATE_FREQUENCY_ON_SECONDS) {
+    if (timePassedRef.current > CONFIGURATION.dataSharedFrequency) {
       timePassedRef.current = 0;
-      handleServerPosition([posX, posY, posZ]);
+      sharePositionWebSocket([posX, posY, posZ]);
     }
 
     setMovementDirection(camera.rotation);

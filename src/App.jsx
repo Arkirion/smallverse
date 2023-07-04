@@ -10,7 +10,7 @@ import { ItemsRenderer } from './ObjectRenderer/ItemsRenderer';
 import { EnvironmentWrapper } from './components/Scene/EnvironmentWrapper';
 import { Canvas} from '@react-three/fiber';
 import { Ui } from './components/UI/ui';
-
+import { CONFIGURATION } from './configurations';
 
 
 function App() {
@@ -22,10 +22,10 @@ function App() {
         <EnvironmentWrapper>
           <Physics>
             <ItemsRenderer />
-            <Player handleServerPosition={sharePositionWebSocket} />
             <PlayersRenderer webSocketClient={webSocketClient} userClients={userClients} />
-            <DevTools />
+            <Player sharePositionWebSocket={sharePositionWebSocket} />
             <Ground />
+            {CONFIGURATION.devTools.enabled && <DevTools />}
             {/* DevTools , TODO: feature flag*/}
           </Physics>
         </EnvironmentWrapper>
