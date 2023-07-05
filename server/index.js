@@ -41,6 +41,13 @@ ioServer.on("connection", (playerClient) => {
     }
   })
 
+  playerClient.on('addItem', ({ id, item }) => {
+    if (!item) return
+    if (clients[id]) {
+      ioServer.sockets.emit('addItem', {item, id})
+    }
+  })
+
   playerClient.on("disconnect", () => {
     //Delete this player client from the object
     delete clients[playerClient.id];

@@ -1,7 +1,7 @@
 // @ts-check
 
 import { useState, useEffect } from "react";
-import { useItemSelectorStore } from "../../../store/itemSelectoreStore";
+import { useItemSelectorStore } from "../../../store/itemSelectorStore";
 
 const ACTIONS_KEYBOARD_MAP = {
   KeyW: "moveForward",

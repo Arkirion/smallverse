@@ -1,11 +1,13 @@
 import { io } from 'socket.io-client';
 import { useState, useEffect } from 'react';
+import { useItemsStore } from '../store/itemsStore';
+import { CONFIGURATION } from '../configurations';
 
 const SERVER_URL = 'http://localhost:4000'
 export const useWebSocket = () => {
   const [userClients, setClients] = useState({});
-
   const [webSocketClient, setWebSocketClient] = useState(null);
+  const addItem = useItemsStore((state) => state.addItem)
 
   // connect socket
   useEffect(() => {
@@ -16,6 +18,16 @@ export const useWebSocket = () => {
         setClients(userClients);
     });
 
+     
+    if (CONFIGURATION.websocketFeatures.shareItems) {
+      socket.on('addItem', ({ item, id }) => {
+        if (id !== socket.id) {
+          addItem({ pos: item.pos, modelId : item.modelId});
+        }
+      });
+    }
+
+
     return () => {
       socket.disconnect();
     };
@@ -25,13 +37,14 @@ export const useWebSocket = () => {
     webSocketClient?.emit('move', { id: webSocketClient.id, position: playerPosition });
   }
 
-  const shareItemsWebSocket = (playerPosition) => {
-    webSocketClient?.emit('items', { id: webSocketClient.id, position: playerPosition });
+  const addItemWS = (item) => {
+    webSocketClient?.emit('addItem', { item, id : webSocketClient.id});
   }
 
   return {
     webSocketClient,
     userClients,
-    sharePositionWebSocket
+    sharePositionWebSocket,
+    addItemWS
   };
 };

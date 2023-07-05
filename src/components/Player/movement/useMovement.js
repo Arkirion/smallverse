@@ -55,7 +55,7 @@ export const useMovement = ({playerModelApi, sharePositionWebSocket}) => {
     
     // RATE OF POSITION UPDATE
     timePassedRef.current += clockRef.current.getDelta();
-    if (timePassedRef.current > CONFIGURATION.dataSharedFrequency) {
+    if (timePassedRef.current > CONFIGURATION.player.dataSharedFrequency) {
       timePassedRef.current = 0;
       sharePositionWebSocket([posX, posY, posZ]);
     }

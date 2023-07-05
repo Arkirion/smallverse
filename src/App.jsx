@@ -11,13 +11,15 @@ import { EnvironmentWrapper } from './components/Scene/EnvironmentWrapper';
 import { Canvas} from '@react-three/fiber';
 import { Ui } from './components/UI/ui';
 import { CONFIGURATION } from './configurations';
-
+import { WebSocketContext } from './context/webSocketContext'
 
 function App() {
-  const { webSocketClient, userClients, sharePositionWebSocket } = useWebSocket();
+  const { webSocketClient, userClients, sharePositionWebSocket, addItemWS } = useWebSocket();
 
   return (
-    <>
+    <WebSocketContext.Provider value={{
+      addItemWS
+    }} >
       <Canvas shadows>
         <EnvironmentWrapper>
           <Physics>
@@ -31,7 +33,7 @@ function App() {
         </EnvironmentWrapper>
       </Canvas>
       <Ui />
-    </>
+    </WebSocketContext.Provider>
   );
 }
 

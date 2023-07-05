@@ -10,5 +10,9 @@ export const CONFIGURATION = {
   },
   items: {
     distanceToRender: 4,
+  },
+  websocketFeatures: {
+    sharePlayerPositions: true,
+    shareItems: true,
   }
 }

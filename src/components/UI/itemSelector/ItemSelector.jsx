@@ -1,5 +1,5 @@
 import './itemSelector.css'
-import { items, useItemSelectorStore } from '../../../store/itemSelectoreStore'
+import { items, useItemSelectorStore } from '../../../store/itemSelectorStore'
 
 export const ItemSelector = () => {
   const [selectedItem] = useItemSelectorStore(state => [state.selectedItem])

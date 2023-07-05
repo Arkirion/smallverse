@@ -1,12 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useThree } from '@react-three/fiber';
 import { Vector3 } from 'three';
-import { useItemSelectorStore } from '../../store/itemSelectoreStore';
+import { useItemSelectorStore } from '../../store/itemSelectorStore';
+import { useItemsStore } from '../../store/itemsStore';
+import { WebSocketContext } from '../../context/webSocketContext'
 import { CONFIGURATION } from '../../configurations';
 
 export function useRightClick() {
   const { gl, raycaster, camera } = useThree();
   const [items, setItems] = useState([]);
+  const { addItemWS } = useContext(WebSocketContext);
+  const addItem = useItemsStore((state) => state.addItem)
 
   const onClick = (event) => {
     if (event.button === 2) {
@@ -30,14 +34,12 @@ export function useRightClick() {
       const currentSelectedItem = useItemSelectorStore.getState().selectedItem;
       // in the future add more configuration and dinamically
       if (currentSelectedItem.name != 'empty') {
-        setItems((oldItems) => [
-          ...oldItems,
-          {
-            type: currentSelectedItem.name,
-            position: [x, y, z],
-            key: crypto.randomUUID(),
-          },
-        ]);
+        const item = {
+          modelId: currentSelectedItem.name,
+        pos: [x, y, z],
+        }
+        CONFIGURATION.websocketFeatures.shareItems && addItemWS(item)
+        addItem(item);
       }
     }
   };
@@ -50,6 +52,4 @@ export function useRightClick() {
       canvas.removeEventListener('click', onClick);
     };
   }, [gl, raycaster]);
-
-  return { items, setItems };
 }
