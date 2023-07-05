@@ -27,7 +27,7 @@ export const useKeyboard = () => {
     jump: false,
   });
 
-  const setItem = useItemSelectorStore(state => state.setItem)
+  const setSelectedItem = useItemSelectorStore(state => state.setSelectedItem)
   
   /**
    * Maneja la acción del teclado.
@@ -38,7 +38,7 @@ export const useKeyboard = () => {
     const { code: keyKode } = e;
     const action = ACTIONS_KEYBOARD_MAP[keyKode];
     if (keyKode in SHORTCUT_ACTIONS_KEYBOARD_MAP) {
-      setItem(SHORTCUT_ACTIONS_KEYBOARD_MAP[keyKode])
+      setSelectedItem(SHORTCUT_ACTIONS_KEYBOARD_MAP[keyKode])
     }
 
     if (action) {

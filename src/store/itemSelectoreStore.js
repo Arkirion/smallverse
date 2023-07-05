@@ -17,7 +17,7 @@ export const items = {
 
 export const useItemSelectorStore = create((set, get) => ({
   selectedItem: items['empty'],
-  setItem: (itemKey) => {
+  setSelectedItem: (itemKey) => {
     set({ selectedItem: items[itemKey] });
   },
 }));

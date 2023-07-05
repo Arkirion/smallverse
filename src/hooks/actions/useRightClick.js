@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { useThree } from '@react-three/fiber';
 import { Vector3 } from 'three';
 import { useItemSelectorStore } from '../../store/itemSelectoreStore';
-
-const DISTANCE = 4;
+import { CONFIGURATION } from '../../configurations';
 
 export function useRightClick() {
   const { gl, raycaster, camera } = useThree();
@@ -25,14 +24,20 @@ export function useRightClick() {
       // }
 
       camera.getWorldDirection(direction);
-      direction.normalize().multiplyScalar(DISTANCE);
+      direction.normalize().multiplyScalar(CONFIGURATION.items.distanceToRender);
       const [x, y, z] = camera.position.clone().add(direction);
 
-      const currentSelectedItem = useItemSelectorStore.getState().selectedItem.name;
-      if (currentSelectedItem === 'sphere') {
-        setItems((oldItems) => [...oldItems, { type: 'sphere', position: [x, y, z], color: 'red', key: crypto.randomUUID() }]);
-      } else if (currentSelectedItem === 'square') {
-        setItems((oldItems) => [...oldItems, { type: 'square', position: [x, y, z], color: 'green', key: crypto.randomUUID() }]);
+      const currentSelectedItem = useItemSelectorStore.getState().selectedItem;
+      // in the future add more configuration and dinamically
+      if (currentSelectedItem.name != 'empty') {
+        setItems((oldItems) => [
+          ...oldItems,
+          {
+            type: currentSelectedItem.name,
+            position: [x, y, z],
+            key: crypto.randomUUID(),
+          },
+        ]);
       }
     }
   };

@@ -25,6 +25,10 @@ export const useWebSocket = () => {
     webSocketClient?.emit('move', { id: webSocketClient.id, position: playerPosition });
   }
 
+  const shareItemsWebSocket = (playerPosition) => {
+    webSocketClient?.emit('items', { id: webSocketClient.id, position: playerPosition });
+  }
+
   return {
     webSocketClient,
     userClients,

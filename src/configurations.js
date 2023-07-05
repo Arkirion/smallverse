@@ -7,5 +7,8 @@ export const CONFIGURATION = {
   },
   devTools: {
     enabled: true
+  },
+  items: {
+    distanceToRender: 4,
   }
 }
